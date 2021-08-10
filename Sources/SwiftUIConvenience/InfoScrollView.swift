@@ -8,15 +8,29 @@ class InfoScrollViewStorage {
 
 public struct InfoScrollView<Content: View>: View {
   
-  public let showsIndicators: Bool
-  @Binding public var scrollOffset: CGFloat
-  @Binding public var dismissProgress: CGFloat
-  public var stopUpdatingAfterDismiss: Bool = false
-  public var onDismiss: () -> Void
-  @ViewBuilder public var content: () -> Content
+  let showsIndicators: Bool
+  @Binding var scrollOffset: CGFloat
+  @Binding var dismissProgress: CGFloat
+  let stopUpdatingAfterDismiss: Bool
+  var onDismiss: () -> Void
+  var content: () -> Content
   
-  @State var nonObservedStorage = InfoScrollViewStorage()
+  @State private var nonObservedStorage = InfoScrollViewStorage()
   @State private var coordinateSpaceName: String = UUID().uuidString
+  
+  public init(showsIndicators: Bool = true,
+              scrollOffset: Binding<CGFloat>,
+              dismissProgress: Binding<CGFloat>,
+              stopUpdatingAfterDismiss: Bool = false,
+              onDismiss: @escaping () -> Void,
+              content: @escaping () -> Content) {
+    self.showsIndicators = showsIndicators
+    _scrollOffset = scrollOffset
+    _dismissProgress = dismissProgress
+    self.stopUpdatingAfterDismiss = stopUpdatingAfterDismiss
+    self.onDismiss = onDismiss
+    self.content = content
+  }
   
   var isFrozen: Bool {
     stopUpdatingAfterDismiss && dismissProgress == 1
