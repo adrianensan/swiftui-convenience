@@ -35,7 +35,7 @@ public class HostingController: UIHostingController<AnyView> {
   
   var statusBarStyle: UIStatusBarStyle = .default
   var hideHomeIndicator: Bool = false
-  var onBrightnessChange: (() -> Void)?
+  public var onBrightnessChange: (() -> Void)?
   
   public init<T: View>(wrappedView: T) {
     let observedView = AnyView(wrappedView.onPreferenceChange(StatusBarStyleKey.self) { style in
