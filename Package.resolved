@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "SwiftConvenience",
+        "repositoryURL": "https://github.com/adrianensan/swift-convenience",
+        "state": {
+          "branch": "main",
+          "revision": "edc7cd827952f2396eb3b33a9813f13ae0181c08",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
