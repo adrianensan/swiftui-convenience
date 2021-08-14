@@ -3,6 +3,9 @@ import SwiftConvenience
 
 extension HostingController {
   
+  #if os(watchOS)
+  func updateSize() {}
+  #else
   static var main: HostingController?
   
   func updateSize() {
@@ -15,4 +18,5 @@ extension HostingController {
                                                              bottom: safeArea.bottom,
                                                              trailing: safeArea.right))
   }
+  #endif
 }

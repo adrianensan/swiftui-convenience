@@ -30,6 +30,17 @@ public struct Blur: NSViewRepresentable {
   }
 }
 
+#elseif os(watchOS)
+
+public struct Blur: View {
+  
+  public init() {}
+  
+  public var body: some View {
+    Color.clear
+  }
+}
+
 #else
 
 public struct Blur: UIViewRepresentable {

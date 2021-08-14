@@ -8,6 +8,9 @@ public class UIConstantsObservable: ObservableObject {
   #if os(macOS)
   @Published public var screenSize: CGSize = NSApplication.shared.mainWindow?.frame.size ?? CGSize(width: 200, height: 400)
   @Published public var safeAreaInsets: EdgeInsets = EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+  #elseif os(watchOS)
+  @Published public var screenSize: CGSize = WKInterfaceDevice.current().screenBounds.size
+  @Published public var safeAreaInsets: EdgeInsets = EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
   #else
   @Published public var screenSize: CGSize = UIScreen.main.bounds.size
   @Published public var safeAreaInsets: EdgeInsets = (UIApplication.shared.windows.first?.safeAreaInsets ?? .zero) =& {
