@@ -5,8 +5,14 @@ import SwiftUI
 
 public struct Blur: NSViewRepresentable {
   
-  public var material: NSVisualEffectView.Material = .popover
-  var blendingMode: NSVisualEffectView.BlendingMode = .withinWindow
+  public var material: NSVisualEffectView.Material
+  public var blendingMode: NSVisualEffectView.BlendingMode
+  
+  public init(material: NSVisualEffectView.Material = .popover,
+              blendingMode: NSVisualEffectView.BlendingMode = .withinWindow) {
+    self.material = material
+    self.blendingMode = blendingMode
+  }
   
   public func makeNSView(context: Context) -> NSVisualEffectView
   {
@@ -28,11 +34,17 @@ public struct Blur: NSViewRepresentable {
 
 public struct Blur: UIViewRepresentable {
   
-#if os(iOS)
-  public var style: UIBlurEffect.Style = .systemUltraThinMaterialDark
-#else
-  public var style: UIBlurEffect.Style = .dark
-#endif
+  public var style: UIBlurEffect.Style
+
+  #if os(iOS)
+  public init(style: UIBlurEffect.Style = .systemUltraThinMaterialDark) {
+    self.style = style
+  }
+  #else
+  public init(style: UIBlurEffect.Style = .dark) {
+    self.style = style
+  }
+  #endif
   
   public func makeUIView(context: UIViewRepresentableContext<Self>) -> UIVisualEffectView {
     UIVisualEffectView()
