@@ -74,22 +74,24 @@ public struct InfoScrollView<Content: View>: View {
   }
   
   public var body: some View {
-    ZStack(alignment: .top) {
+    ScrollViewReader { scrollView in
       ScrollView(.vertical, showsIndicators: showsIndicators) {
         VStack(spacing: 0) {
           Color.clear.frame(height: 0)
+            .id("top")
             .background(GeometryReader { geometry -> Color in
               update(offset: geometry.frame(in: .named(coordinateSpaceName)).minY)
               return .clear
             })
-          if !isFrozen {
-            content()
-          }
+          content()
+            .offset(y: isFrozen ? scrollOffset : 0)
+            .onChange(of: isFrozen) {
+              if $0 {
+                scrollView.scrollTo("top", anchor: .top)
+              }
+            }
         }
       }.coordinateSpace(name: coordinateSpaceName)
-      if isFrozen {
-        content().offset(y: isFrozen ? scrollOffset : 0)
-      }
     }
   }
 }
