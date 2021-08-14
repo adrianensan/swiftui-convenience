@@ -1,6 +1,8 @@
 import SwiftUI
+import SwiftConvenience
 
 class InfoScrollViewStorage {
+  var coordinateSpaceName: String = UUID().uuidString
   var readyForDismiss: Bool = true
   var isDismissing: Bool = true
   var timeReachedtop: TimeInterval = 0
@@ -16,7 +18,6 @@ public struct InfoScrollView<Content: View>: View {
   var content: () -> Content
   
   @State private var nonObservedStorage = InfoScrollViewStorage()
-  @State private var coordinateSpaceName: String = UUID().uuidString
   
   public init(showsIndicators: Bool = true,
               scrollOffset: Binding<CGFloat>,
@@ -38,7 +39,7 @@ public struct InfoScrollView<Content: View>: View {
   
   func update(offset: CGFloat) {
     guard scrollOffset != offset && !isFrozen else { return }
-    DispatchQueue.main.async {
+    dispatchMainAsync {
       if offset < 0 {
         nonObservedStorage.timeReachedtop = Date().timeIntervalSince1970
       }
@@ -74,25 +75,17 @@ public struct InfoScrollView<Content: View>: View {
   }
   
   public var body: some View {
-    ScrollViewReader { scrollView in
-      ScrollView(.vertical, showsIndicators: showsIndicators) {
-        VStack(spacing: 0) {
-          Color.clear.frame(height: 0)
-            .id("top")
-            .background(GeometryReader { geometry -> Color in
-              update(offset: geometry.frame(in: .named(coordinateSpaceName)).minY)
-              return .clear
-            })
-          content()
-            .offset(y: isFrozen ? scrollOffset : 0)
-            .onChange(of: isFrozen) {
-              if $0 {
-                scrollView.scrollTo("top", anchor: .top)
-              }
-            }
-        }
-      }.coordinateSpace(name: coordinateSpaceName)
-    }
+    ScrollView(.vertical, showsIndicators: showsIndicators) {
+      VStack(spacing: 0) {
+        Color.clear.frame(height: 0)
+          .background(GeometryReader { geometry -> Color in
+            update(offset: geometry.frame(in: .named(nonObservedStorage.coordinateSpaceName)).minY)
+            return .clear
+          })
+        content()
+          .offset(y: isFrozen ? scrollOffset : 0)
+      }
+    }.coordinateSpace(name: nonObservedStorage.coordinateSpaceName)
   }
 }
 
