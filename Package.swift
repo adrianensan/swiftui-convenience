@@ -11,11 +11,15 @@ let package = Package(
     ],
     dependencies: [.package(name: "SwiftConvenience",
                             url: "https://github.com/adrianensan/swift-convenience",
+                            branch: "main"),
+                   .package(name: "DeviceInfo",
+                            url: "https://github.com/adrianensan/device-info",
                             branch: "main")],
     targets: [
         .target(
             name: "SwiftUIConvenience",
-            dependencies: [.byNameItem(name: "SwiftConvenience", condition: nil)]),
+            dependencies: [.byNameItem(name: "SwiftConvenience", condition: nil),
+                           .byNameItem(name: "DeviceInfo", condition: nil)]),
         .testTarget(
             name: "SwiftUIConvenienceTests",
             dependencies: ["SwiftUIConvenience"]),

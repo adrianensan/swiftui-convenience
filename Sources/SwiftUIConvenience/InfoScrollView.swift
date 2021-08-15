@@ -1,14 +1,14 @@
 import SwiftUI
 import SwiftConvenience
 
-class InfoScrollViewStorage {
-  var coordinateSpaceName: String = UUID().uuidString
-  var readyForDismiss: Bool = true
-  var isDismissing: Bool = true
-  var timeReachedtop: TimeInterval = 0
-}
-
 public struct InfoScrollView<Content: View>: View {
+  
+  private class NonObservedStorage {
+    var coordinateSpaceName: String = UUID().uuidString
+    var readyForDismiss: Bool = true
+    var isDismissing: Bool = true
+    var timeReachedtop: TimeInterval = 0
+  }
   
   let showsIndicators: Bool
   @Binding var scrollOffset: CGFloat
@@ -17,7 +17,7 @@ public struct InfoScrollView<Content: View>: View {
   var onDismiss: () -> Void
   var content: () -> Content
   
-  @State private var nonObservedStorage = InfoScrollViewStorage()
+  @State private var nonObservedStorage = NonObservedStorage()
   
   public init(showsIndicators: Bool = true,
               scrollOffset: Binding<CGFloat>,

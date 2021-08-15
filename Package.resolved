@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "DeviceInfo",
+        "repositoryURL": "https://github.com/adrianensan/device-info",
+        "state": {
+          "branch": "main",
+          "revision": "71e7d84dc23aa2e21df97cac2a959448864becc0",
+          "version": null
+        }
+      },
+      {
         "package": "SwiftConvenience",
         "repositoryURL": "https://github.com/adrianensan/swift-convenience",
         "state": {
