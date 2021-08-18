@@ -11,6 +11,7 @@ public struct InfoScrollView<Content: View>: View {
   }
   
   let showsIndicators: Bool
+  let allowScroll: Bool
   @Binding var scrollOffset: CGFloat
   @Binding var dismissProgress: CGFloat
   let stopUpdatingAfterDismiss: Bool
@@ -20,14 +21,16 @@ public struct InfoScrollView<Content: View>: View {
   @State private var nonObservedStorage = NonObservedStorage()
   
   public init(showsIndicators: Bool = true,
+              allowScroll: Bool = true,
               scrollOffset: Binding<CGFloat>,
               dismissProgress: Binding<CGFloat>,
               stopUpdatingAfterDismiss: Bool = false,
               onDismiss: @escaping () -> Void,
               content: @escaping () -> Content) {
     self.showsIndicators = showsIndicators
-    _scrollOffset = scrollOffset
-    _dismissProgress = dismissProgress
+    self.allowScroll = allowScroll
+    self._scrollOffset = scrollOffset
+    self._dismissProgress = dismissProgress
     self.stopUpdatingAfterDismiss = stopUpdatingAfterDismiss
     self.onDismiss = onDismiss
     self.content = content
@@ -75,7 +78,7 @@ public struct InfoScrollView<Content: View>: View {
   }
   
   public var body: some View {
-    ScrollView(.vertical, showsIndicators: showsIndicators) {
+    ScrollView(allowScroll ? .vertical : [], showsIndicators: showsIndicators) {
       VStack(spacing: 0) {
         Color.clear.frame(height: 0)
           .background(GeometryReader { geometry -> Color in
