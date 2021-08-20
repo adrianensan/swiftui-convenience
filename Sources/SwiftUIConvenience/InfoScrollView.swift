@@ -26,7 +26,7 @@ public struct InfoScrollView<Content: View>: View {
               dismissProgress: Binding<CGFloat>,
               stopUpdatingAfterDismiss: Bool = false,
               onDismiss: @escaping () -> Void,
-              content: @escaping () -> Content) {
+              @ViewBuilder content: @escaping () -> Content) {
     self.showsIndicators = showsIndicators
     self.allowScroll = allowScroll
     self._scrollOffset = scrollOffset
