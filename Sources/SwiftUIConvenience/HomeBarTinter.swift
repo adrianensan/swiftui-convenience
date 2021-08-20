@@ -1,5 +1,6 @@
-import SwiftUI
 #if os(iOS)
+import SwiftUI
+import DeviceInfo
 
 public enum HomeBarTint {
   case none
@@ -28,16 +29,55 @@ struct HomeBarTintView: View {
     }
   }
   
+  static var isSupported: Bool {
+    var deviceModel = Device.current
+    if case .simulator(let simulatedDevice) = deviceModel {
+      deviceModel = simulatedDevice
+    }
+    
+    switch deviceModel {
+    case .iPhone(let model): return [
+      .x, .xs, .xsMax,
+      ._11Pro, ._11ProMax, ._11,
+      ._12mini, ._12, ._12Pro, ._12ProMax
+    ].contains(model)
+    default: return false
+    }
+  }
+  
+  var homeBarWidth: CGFloat {
+    var deviceModel = Device.current
+    if case .simulator(let simulatedDevice) = deviceModel {
+      deviceModel = simulatedDevice
+    }
+    
+    switch deviceModel {
+    case .iPhone(let model):
+      switch model {
+      case .x, .xs: return 134
+      case .xsMax: return 148
+      case .xr: return 132
+      case ._11, ._11Pro: return 134
+      case ._11ProMax: return 148
+      case ._12mini: return 132
+      case ._12, ._12Pro: return 134
+      case ._12ProMax: return 152
+      default: return 0
+      }
+    default: return 0
+    }
+  }
+  
   var body: some View {
     ZStack {
       Capsule()
         .fill(homebarBackgroundColor)
-        .frame(width: 148, height: 5)
+        .padding(.horizontal, 4)
       
       Capsule()
         .fill(homebarBackgroundColor)
-        .frame(width: 152, height: 3)
-    }.frame(width: 152, height: 5)
+        .padding(.vertical, 1)
+    }.frame(width: homeBarWidth, height: 5)
       .padding(.bottom, 8)
     .frame(width: uiConstants.screenSize.width, height: uiConstants.screenSize.height, alignment: .bottom)
     .ignoresSafeArea()
@@ -52,7 +92,13 @@ struct HomeBarTintView: View {
 
 public extension View {
   func homeBar(tint: HomeBarTint) -> some View {
-    overlay(HomeBarTintView(homeBatTint: tint))
+    Group {
+      if HomeBarTintView.isSupported {
+        self.overlay(HomeBarTintView(homeBatTint: tint))
+      } else {
+        self
+      }
+    }
   }
 }
 #endif
