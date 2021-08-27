@@ -4,6 +4,7 @@ import SwiftConvenience
 public struct InfoScrollView<Content: View>: View {
   
   private class NonObservedStorage {
+    var id: String = UUID().uuidString
     var coordinateSpaceName: String = UUID().uuidString
     var readyForDismiss: Bool = true
     var isDismissing: Bool = true
@@ -89,6 +90,7 @@ public struct InfoScrollView<Content: View>: View {
           .offset(y: isFrozen ? scrollOffset : 0)
       }
     }.coordinateSpace(name: nonObservedStorage.coordinateSpaceName)
+      .id(nonObservedStorage.id)
   }
 }
 
