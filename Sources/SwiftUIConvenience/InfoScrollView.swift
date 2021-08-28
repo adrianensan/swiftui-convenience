@@ -17,7 +17,7 @@ public struct InfoScrollView<Content: View>: View {
   @Binding var dismissProgress: CGFloat
   let stopUpdatingAfterDismiss: Bool
   var onDismiss: () -> Void
-  var content: () -> Content
+  var content: Content
   
   @State private var nonObservedStorage = NonObservedStorage()
   
@@ -34,7 +34,7 @@ public struct InfoScrollView<Content: View>: View {
     self._dismissProgress = dismissProgress
     self.stopUpdatingAfterDismiss = stopUpdatingAfterDismiss
     self.onDismiss = onDismiss
-    self.content = content
+    self.content = content()
   }
   
   var isFrozen: Bool {
@@ -86,7 +86,7 @@ public struct InfoScrollView<Content: View>: View {
             update(offset: geometry.frame(in: .named(nonObservedStorage.coordinateSpaceName)).minY)
             return .clear
           })
-        content()
+        content
           .offset(y: isFrozen ? scrollOffset : 0)
       }
     }.coordinateSpace(name: nonObservedStorage.coordinateSpaceName)
