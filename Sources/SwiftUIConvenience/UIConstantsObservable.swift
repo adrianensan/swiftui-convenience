@@ -18,13 +18,9 @@ public class UIConstantsObservable: ObservableObject {
   }
   #endif
   
-  public var horizontalMargin: CGFloat { 6 + max(0, min(24, (screenSize.width - 320) / 3)) }
+  public var horizontalMargin: CGFloat { 6 + max(0, min(36, (screenSize.width - 320) / 3)) }
   
   func update(size: CGSize, safeArea: EdgeInsets) {
-    //    if Device.current.screenCornerRadius == 0 {
-    //      safeArea.top += 8
-    //    }
-    
     if screenSize != size {
       screenSize = size
     }
