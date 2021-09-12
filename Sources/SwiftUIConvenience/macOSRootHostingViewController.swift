@@ -7,7 +7,7 @@ import AppKit
 public class HostingController: NSHostingController<AnyView> {
   
   public init<T: View>(wrappedView: T) {
-    let observedView = AnyView(wrappedView)
+    let observedView = AnyView(wrappedView.ignoresSafeArea())
     
     super.init(rootView: observedView)
     Self.main = self
