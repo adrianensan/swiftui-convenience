@@ -26,11 +26,11 @@ public enum ImageRenderer {
     let screenSale = NSScreen.main!.backingScaleFactor
     
     let view = NSHostingView(rootView: content)
-    view.frame = CGRect(origin: .zero, size: size / screenSale)
+    view.frame = CGRect(origin: .zero, size: size)
     
-    let targetSize = NSSize(width: size.width / screenSale, height: size.height / screenSale)
+    let targetSize = NSSize(width: size.width, height: size.height)
     guard let imageRepresentation = view.bitmapImageRepForCachingDisplay(in: view.frame),
-          let newImage = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: Int(size.width), pixelsHigh: Int(size.height), bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0)
+          let newImage = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: Int(size.width * screenSale), pixelsHigh: Int(size.height * screenSale), bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0)
     else { return nil }
     
     view.cacheDisplay(in: view.frame, to: imageRepresentation)
