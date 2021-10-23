@@ -1,13 +1,13 @@
 import SwiftUI
 import SwiftConvenience
 
-enum ImageRenderer {
+public enum ImageRenderer {
   #if os(iOS)
-  static func render<Content: View>(view: Content, size: CGSize) -> UIImage? {
+  public static func render<Content: View>(view: Content, size: CGSize) -> UIImage? {
     let controller = UIHostingController(rootView: view)
     guard let view = controller.view else { return nil }
     
-    let targetSize = CGSize(width: cellSize, height: cellSize)
+    let targetSize = size
     view.frame.size = targetSize
     view.backgroundColor = .clear
     
@@ -22,7 +22,7 @@ enum ImageRenderer {
     return failed ? nil : image
   }
   #elseif os(macOS)
-  static func render<Content: View>(view content: Content, size: CGSize) -> NSImage? {
+  public static func render<Content: View>(view content: Content, size: CGSize) -> NSImage? {
     let screenSale = NSScreen.main!.backingScaleFactor
     
     let view = NSHostingView(rootView: content)
