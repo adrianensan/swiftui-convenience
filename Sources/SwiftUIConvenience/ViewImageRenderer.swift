@@ -47,5 +47,9 @@ public enum ImageRenderer {
       return nil
     }
   }
+  #else
+  public static func render<Content: View>(view content: Content, size: CGSize) -> NativeImage? {
+   return nil
+  }
   #endif
 }

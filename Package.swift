@@ -1,20 +1,20 @@
 // swift-tools-version:5.5
 import PackageDescription
+import Foundation
 
-let useLocal = false
-let dependencies: [Package.Dependency]
-if useLocal {
-  dependencies = [
-    .package(name: "SwiftConvenience",
-             path: "~/Repos/swift-packages/swift-convenience")
-  ]
+let swiftConveniencePackage: Package.Dependency
+if FileManager.default.fileExists(atPath: "Users/adrian/Repos/swift-packages/swift-convenience") {
+  swiftConveniencePackage = .package(name: "SwiftConvenience",
+                                       path: "~/Repos/swift-packages/swift-convenience")
 } else {
-  dependencies = [
-    .package(name: "SwiftConvenience",
-             url: "https://github.com/hello-apps/swift-convenience",
-             branch: "main")
-  ]
+  swiftConveniencePackage = .package(name: "SwiftConvenience",
+                                       url: "https://github.com/hello-apps/swift-convenience",
+                                       branch: "main")
 }
+
+let dependencies: [Package.Dependency] = [
+  swiftConveniencePackage
+]
 
 let package = Package(
     name: "SwiftUIConvenience",
