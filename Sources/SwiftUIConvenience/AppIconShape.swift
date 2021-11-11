@@ -22,8 +22,8 @@ public struct AppIconShape: InsettableShape {
     insetRect.size.height -= 2 * insetAmount
     
     path.addRoundedRect(in: insetRect,
-                        cornerSize: CGSize(width: insetRect.width / 5,
-                                           height: insetRect.width / 5),
+                        cornerSize: CGSize(width: 0.2 * insetRect.width,
+                                           height: 0.2 * insetRect.height),
                         style: .continuous)
     
     return path

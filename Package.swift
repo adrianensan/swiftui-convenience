@@ -3,7 +3,7 @@ import PackageDescription
 import Foundation
 
 let swiftConveniencePackage: Package.Dependency
-if FileManager.default.fileExists(atPath: "Users/adrian/Repos/swift-packages/swift-convenience") {
+if FileManager.default.fileExists(atPath: "Users/adrianensan/Repos/swift-packages/swift-convenience") {
   swiftConveniencePackage = .package(name: "SwiftConvenience",
                                        path: "~/Repos/swift-packages/swift-convenience")
 } else {
@@ -18,7 +18,7 @@ let dependencies: [Package.Dependency] = [
 
 let package = Package(
     name: "SwiftUIConvenience",
-    platforms: [.iOS(.v14), .macOS(.v11), .tvOS(.v14), .watchOS(.v7), .macCatalyst(.v14)],
+    platforms: [.iOS(.v15), .macOS(.v12), .tvOS(.v15), .watchOS(.v8), .macCatalyst(.v15)],
     products: [
       .library(
         name: "SwiftUIConvenience",
@@ -30,7 +30,8 @@ let package = Package(
           name: "SwiftUIConvenience",
           dependencies: [
             .byNameItem(name: "SwiftConvenience", condition: nil)
-          ]),
+          ],
+          swiftSettings: [.define("APPLICATION_EXTENSION_API_ONLY")]),
         .testTarget(
             name: "SwiftUIConvenienceTests",
             dependencies: ["SwiftUIConvenience"]),
