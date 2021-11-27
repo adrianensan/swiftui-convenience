@@ -2,10 +2,15 @@
 import PackageDescription
 import Foundation
 
+var helloPackagesPath = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("/Developer/Hello/packages/", isDirectory: true).absoluteString
+if helloPackagesPath.hasPrefix("file://") {
+  helloPackagesPath.removeFirst(7)
+}
+
 let swiftConveniencePackage: Package.Dependency
-if FileManager.default.fileExists(atPath: "Users/adrianensan/Repos/swift-packages/swift-convenience") {
+if FileManager.default.fileExists(atPath: "\(helloPackagesPath)swift-convenience") {
   swiftConveniencePackage = .package(name: "SwiftConvenience",
-                                       path: "~/Repos/swift-packages/swift-convenience")
+                                       path: "\(helloPackagesPath)swift-convenience")
 } else {
   swiftConveniencePackage = .package(name: "SwiftConvenience",
                                        url: "https://github.com/hello-apps/swift-convenience",
