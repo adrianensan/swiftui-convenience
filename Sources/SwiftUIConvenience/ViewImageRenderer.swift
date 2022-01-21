@@ -4,7 +4,10 @@ import SwiftConvenience
 public enum ImageRenderer {
   #if os(iOS)
   public static func render<Content: View>(view: Content, size: CGSize) -> UIImage? {
-    let controller = UIHostingController(rootView: view)
+    let controller = UIHostingController(rootView: view
+                                          .frame(width: size.width, height: size.height)
+                                          .drawingGroup()
+                                          .ignoresSafeArea())
     guard let view = controller.view else { return nil }
     
     let targetSize = size
@@ -22,10 +25,13 @@ public enum ImageRenderer {
     return failed ? nil : image
   }
   #elseif os(macOS)
-  public static func render<Content: View>(view content: Content, size: CGSize) -> NSImage? {
+  public static func renderData<Content: View>(view content: Content, size: CGSize) -> Data? {
     let screenSale = NSScreen.main!.backingScaleFactor
     
-    let view = NSHostingView(rootView: content)
+    let view = NSHostingView(rootView: content
+                              .frame(width: size.width, height: size.height)
+                              .drawingGroup()
+                              .ignoresSafeArea())
     view.frame = CGRect(origin: .zero, size: size)
     
     let targetSize = NSSize(width: size.width, height: size.height)
@@ -36,16 +42,19 @@ public enum ImageRenderer {
     view.cacheDisplay(in: view.frame, to: imageRepresentation)
     newImage.size = targetSize
     NSGraphicsContext.saveGraphicsState()
-    NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: newImage)
-    NSGraphicsContext.current?.imageInterpolation = .high
+    NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: newImage)? +& {
+      $0.shouldAntialias = true
+      $0.imageInterpolation = .high
+    }
     imageRepresentation.draw(in: NSRect(origin: .zero, size: targetSize))
     NSGraphicsContext.restoreGraphicsState()
     
-    if let imageData = newImage.representation(using: .png, properties: [.compressionFactor: 0.9]) {
-      return NSImage(data: imageData)
-    } else {
-      return nil
-    }
+    return newImage.representation(using: .png, properties: [.compressionFactor: 0.9])
+  }
+  
+  public static func render<Content: View>(view content: Content, size: CGSize) -> NSImage? {
+    guard let imageData = renderData(view: content, size: size) else { return nil }
+    return NSImage(data: imageData)
   }
   #else
   public static func render<Content: View>(view content: Content, size: CGSize) -> NativeImage? {
