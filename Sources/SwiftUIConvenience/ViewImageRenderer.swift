@@ -3,7 +3,7 @@ import SwiftConvenience
 
 public enum ImageRenderer {
   #if os(iOS)
-  public static func render<Content: View>(view: Content, size: CGSize) -> UIImage? {
+  public static func render<Content: View>(view: Content, size: CGSize) -> NativeImage? {
     let controller = UIHostingController(rootView: view
                                           .frame(width: size.width, height: size.height)
                                           .drawingGroup()
@@ -24,40 +24,57 @@ public enum ImageRenderer {
     }
     return failed ? nil : image
   }
+  
+  public static func renderCGImage<Content: View>(view: Content, size: CGSize) -> CGImage? {
+    let image: NativeImage? = render(view: view, size: size)
+    return image?.cgImage
+  }
   #elseif os(macOS)
-  public static func renderData<Content: View>(view content: Content, size: CGSize) -> Data? {
-    let screenSale = NSScreen.main!.backingScaleFactor
-    
+  private static func renderBitmapImage<Content: View>(view content: Content, size: CGSize) -> NSBitmapImageRep? {
     let view = NSHostingView(rootView: content
                               .frame(width: size.width, height: size.height)
                               .drawingGroup()
                               .ignoresSafeArea())
     view.frame = CGRect(origin: .zero, size: size)
     
-    let targetSize = NSSize(width: size.width, height: size.height)
-    guard let imageRepresentation = view.bitmapImageRepForCachingDisplay(in: view.frame),
-          let newImage = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: Int(size.width * screenSale), pixelsHigh: Int(size.height * screenSale), bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0)
-    else { return nil }
+    guard let imageRepresentation = view.bitmapImageRepForCachingDisplay(in: view.frame) else { return nil }
     
     view.cacheDisplay(in: view.frame, to: imageRepresentation)
+    
+    return imageRepresentation
+  }
+  
+  public static func renderData<Content: View>(view content: Content, size: CGSize) -> Data? {
+    let screenSale = NSScreen.main!.backingScaleFactor
+    let targetSize = NSSize(width: size.width, height: size.height)
+    guard let nsImagerep = renderBitmapImage(view: content, size: size),
+          let newImage = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: Int(size.width * screenSale), pixelsHigh: Int(size.height * screenSale), bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0)
+    else { return nil }
     newImage.size = targetSize
     NSGraphicsContext.saveGraphicsState()
     NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: newImage)? +& {
       $0.shouldAntialias = true
       $0.imageInterpolation = .high
     }
-    imageRepresentation.draw(in: NSRect(origin: .zero, size: targetSize))
+    nsImagerep.draw(in: NSRect(origin: .zero, size: targetSize))
     NSGraphicsContext.restoreGraphicsState()
-    
     return newImage.representation(using: .png, properties: [.compressionFactor: 0.9])
   }
   
+  public static func renderCGImage<Content: View>(view content: Content, size: CGSize) -> CGImage? {
+    let nsImagerep = renderBitmapImage(view: content, size: size)
+    return nsImagerep?.cgImage
+  }
+  
   public static func render<Content: View>(view content: Content, size: CGSize) -> NSImage? {
-    guard let imageData = renderData(view: content, size: size) else { return nil }
+    guard let imageData: Data = renderData(view: content, size: size) else { return nil }
     return NSImage(data: imageData)
   }
   #else
   public static func render<Content: View>(view content: Content, size: CGSize) -> NativeImage? {
+   return nil
+  }
+  public static func renderCGImage<Content: View>(view content: Content, size: CGSize) -> CGImage? {
    return nil
   }
   #endif

@@ -22,3 +22,15 @@ public extension Image {
     #endif
   }
 }
+
+public extension NativeImage {
+  static func create(from cgImage: CGImage, size: CGSize) -> NativeImage {
+    #if canImport(UIKit)
+    NativeImage(cgImage: cgImage)
+    #elseif canImport(AppKit)
+    NativeImage(cgImage: cgImage, size: size)
+    #else
+    NativeImage.init("")
+    #endif
+  }
+}

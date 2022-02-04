@@ -10,11 +10,10 @@ if helloPackagesPath.hasPrefix("file://") {
 let swiftConveniencePackage: Package.Dependency
 if FileManager.default.fileExists(atPath: "\(helloPackagesPath)swift-convenience") {
   swiftConveniencePackage = .package(name: "SwiftConvenience",
-                                       path: "\(helloPackagesPath)swift-convenience")
+                                     path: "\(helloPackagesPath)swift-convenience")
 } else {
-  swiftConveniencePackage = .package(name: "SwiftConvenience",
-                                       url: "https://github.com/hello-apps/swift-convenience",
-                                       branch: "main")
+  swiftConveniencePackage = .package(url: "https://github.com/hello-apps/swift-convenience",
+                                     branch: "main")
 }
 
 let dependencies: [Package.Dependency] = [
@@ -33,9 +32,7 @@ let package = Package(
     targets: [
         .target(
           name: "SwiftUIConvenience",
-          dependencies: [
-            .byNameItem(name: "SwiftConvenience", condition: nil)
-          ],
+          dependencies: ["SwiftConvenience"],
           swiftSettings: [.define("APPLICATION_EXTENSION_API_ONLY")]),
         .testTarget(
             name: "SwiftUIConvenienceTests",
