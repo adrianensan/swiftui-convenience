@@ -44,11 +44,18 @@ public enum ImageRenderer {
     return imageRepresentation
   }
   
-  public static func renderData<Content: View>(view content: Content, size: CGSize) -> Data? {
+  public static func renderData<Content: View>(view content: Content, size: CGSize, sizeIsPixels: Bool) -> Data? {
     let screenSale = NSScreen.main!.backingScaleFactor
-    let targetSize = NSSize(width: size.width, height: size.height)
+    var targetSize = NSSize(width: size.width, height: size.height)
+    if sizeIsPixels { targetSize = targetSize / screenSale }
+    
     guard let nsImagerep = renderBitmapImage(view: content, size: size),
-          let newImage = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: Int(size.width * screenSale), pixelsHigh: Int(size.height * screenSale), bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0)
+          let newImage = NSBitmapImageRep(bitmapDataPlanes: nil,
+                                          pixelsWide: Int(size.width * (sizeIsPixels ? 1 : screenSale)),
+                                          pixelsHigh: Int(size.height * (sizeIsPixels ? 1 : screenSale)),
+                                          bitsPerSample: 8, samplesPerPixel: 4,
+                                          hasAlpha: true, isPlanar: false,
+                                          colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0)
     else { return nil }
     newImage.size = targetSize
     NSGraphicsContext.saveGraphicsState()
@@ -67,7 +74,7 @@ public enum ImageRenderer {
   }
   
   public static func render<Content: View>(view content: Content, size: CGSize) -> NSImage? {
-    guard let imageData: Data = renderData(view: content, size: size) else { return nil }
+    guard let imageData: Data = renderData(view: content, size: size, sizeIsPixels: false) else { return nil }
     return NSImage(data: imageData)
   }
   #else
