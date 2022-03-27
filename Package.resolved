@@ -2,17 +2,8 @@
   "object": {
     "pins": [
       {
-        "package": "DeviceInfo",
-        "repositoryURL": "https://github.com/adrianensan/device-info",
-        "state": {
-          "branch": "main",
-          "revision": "ef3e6b721dc897fb75c784ed3f878185033865d1",
-          "version": null
-        }
-      },
-      {
         "package": "SwiftConvenience",
-        "repositoryURL": "https://github.com/adrianensan/swift-convenience",
+        "repositoryURL": "https://github.com/hello-apps/swift-convenience",
         "state": {
           "branch": "main",
           "revision": "fcaac675a3ed55029bcf4e28850dda57f5550649",

@@ -32,7 +32,9 @@ let package = Package(
     targets: [
         .target(
           name: "SwiftUIConvenience",
-          dependencies: ["SwiftConvenience"],
+          dependencies: [
+            .product(name: "SwiftConvenience", package: "swift-convenience")
+          ],
           swiftSettings: [.define("APPLICATION_EXTENSION_API_ONLY")]),
         .testTarget(
             name: "SwiftUIConvenienceTests",
