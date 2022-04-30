@@ -9,7 +9,7 @@ if helloPackagesPath.hasPrefix("file://") {
 }
 
 let swiftConveniencePackage: Package.Dependency
-if FileManager.default.fileExists(atPath: "\(helloPackagesPath)swift-convenience") {
+if !helloPackagesPath.contains("/DerivedData/") && FileManager.default.fileExists(atPath: "\(helloPackagesPath)swift-convenience") {
   swiftConveniencePackage = .package(name: "swift-convenience",
                                      path: "\(helloPackagesPath)swift-convenience")
 } else {
